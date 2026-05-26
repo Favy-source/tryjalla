@@ -9,6 +9,50 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      notifications: {
+        Row: {
+          body: string
+          created_at: string
+          entity_id: string | null
+          entity_type: string | null
+          id: string
+          read_at: string | null
+          title: string
+          type: Database["public"]["Enums"]["notification_type"]
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          read_at?: string | null
+          title: string
+          type: Database["public"]["Enums"]["notification_type"]
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          read_at?: string | null
+          title?: string
+          type?: Database["public"]["Enums"]["notification_type"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -51,6 +95,203 @@ export type Database = {
         }
         Relationships: []
       }
+      project_substages: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          description: string | null
+          evidence_urls: string[]
+          id: string
+          name: string
+          notes: string | null
+          project_id: string
+          stage_id: string
+          status: string
+          substage_number: number
+          updated_at: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          evidence_urls?: string[]
+          id?: string
+          name: string
+          notes?: string | null
+          project_id: string
+          stage_id: string
+          status?: string
+          substage_number: number
+          updated_at?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          evidence_urls?: string[]
+          id?: string
+          name?: string
+          notes?: string | null
+          project_id?: string
+          stage_id?: string
+          status?: string
+          substage_number?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_substages_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_substages_stage_id_fkey"
+            columns: ["stage_id"]
+            isOneToOne: false
+            referencedRelation: "stages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      projects: {
+        Row: {
+          assigned_professional_id: string | null
+          boys_quarters_count: number
+          budget: number | null
+          budget_breakdown: Json | null
+          building_type: string | null
+          country: string
+          created_at: string
+          floors: number
+          id: string
+          is_demo: boolean
+          name: string
+          owner_id: string
+          project_type: string
+          roof_type: string | null
+          rooms: Json
+          status: string
+          target_completion_date: string | null
+          updated_at: string
+        }
+        Insert: {
+          assigned_professional_id?: string | null
+          boys_quarters_count?: number
+          budget?: number | null
+          budget_breakdown?: Json | null
+          building_type?: string | null
+          country: string
+          created_at?: string
+          floors?: number
+          id?: string
+          is_demo?: boolean
+          name: string
+          owner_id: string
+          project_type: string
+          roof_type?: string | null
+          rooms?: Json
+          status?: string
+          target_completion_date?: string | null
+          updated_at?: string
+        }
+        Update: {
+          assigned_professional_id?: string | null
+          boys_quarters_count?: number
+          budget?: number | null
+          budget_breakdown?: Json | null
+          building_type?: string | null
+          country?: string
+          created_at?: string
+          floors?: number
+          id?: string
+          is_demo?: boolean
+          name?: string
+          owner_id?: string
+          project_type?: string
+          roof_type?: string | null
+          rooms?: Json
+          status?: string
+          target_completion_date?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "projects_assigned_professional_id_fkey"
+            columns: ["assigned_professional_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "projects_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stages: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          description: string | null
+          id: string
+          is_locked: boolean
+          name: string
+          payment_amount: number | null
+          payment_percentage: number
+          payment_status: string
+          project_id: string
+          stage_number: number
+          started_at: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_locked?: boolean
+          name: string
+          payment_amount?: number | null
+          payment_percentage: number
+          payment_status?: string
+          project_id: string
+          stage_number: number
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_locked?: boolean
+          name?: string
+          payment_amount?: number | null
+          payment_percentage?: number
+          payment_status?: string
+          project_id?: string
+          stage_number?: number
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stages_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -85,6 +326,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_notification: {
+        Args: {
+          p_body: string
+          p_entity_id?: string
+          p_entity_type?: string
+          p_title: string
+          p_type: Database["public"]["Enums"]["notification_type"]
+          p_user_id: string
+        }
+        Returns: string
+      }
       has_role: {
         Args: { required_role: Database["public"]["Enums"]["app_role"] }
         Returns: boolean
@@ -97,6 +349,20 @@ export type Database = {
         | "super_admin"
         | "jala_professional"
         | "contractor"
+      notification_type:
+        | "stage_approved"
+        | "stage_rejected"
+        | "stage_submitted"
+        | "substage_updated"
+        | "payment_recorded"
+        | "payment_released"
+        | "contractor_invited"
+        | "contractor_accepted"
+        | "contractor_rejected"
+        | "certificate_issued"
+        | "project_created"
+        | "message_received"
+        | "system"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -230,6 +496,21 @@ export const Constants = {
         "super_admin",
         "jala_professional",
         "contractor",
+      ],
+      notification_type: [
+        "stage_approved",
+        "stage_rejected",
+        "stage_submitted",
+        "substage_updated",
+        "payment_recorded",
+        "payment_released",
+        "contractor_invited",
+        "contractor_accepted",
+        "contractor_rejected",
+        "certificate_issued",
+        "project_created",
+        "message_received",
+        "system",
       ],
     },
   },

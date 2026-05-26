@@ -12,5 +12,8 @@ export default [
   // Root layout — sidebar + auth gate
   layout("routes/_layout.tsx", [
     index("routes/dashboard.tsx"),
+    route("projects", "routes/projects.tsx"),
+    route("projects/new", "routes/projects.new.tsx"),
+    route("settings", "routes/settings.tsx"),
   ]),
 ] satisfies RouteConfig;
