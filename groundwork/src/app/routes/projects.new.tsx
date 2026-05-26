@@ -10,6 +10,7 @@
  */
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { supabase } from "@/lib/supabase/client";
 import { WizardShell } from "@/components/projects/wizard/WizardShell";
 import { StepCountry }       from "@/components/projects/wizard/steps/StepCountry";
 import { StepProjectType }   from "@/components/projects/wizard/steps/StepProjectType";
@@ -70,22 +71,46 @@ export default function NewProjectPage() {
     else void navigate("/projects");
   }
 
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
   async function handleNext() {
     if (step < 9) {
       setStep((s) => s + 1);
       return;
     }
-    // Step 9 — submit
+    // Step 9 — call create-project edge function
     setSubmitting(true);
+    setSubmitError(null);
     try {
-      // TODO (Day 4): call create-project edge function
-      // const { data, error } = await supabase.functions.invoke("create-project", { body: payload });
-      console.log("[create-project] wizard payload:", state);
+      const payload = {
+        name:                   state.name.trim(),
+        country:                state.country,
+        project_type:           state.projectType,
+        building_type:          state.buildingType || undefined,
+        floors:                 state.floors,
+        rooms:                  state.rooms,
+        per_floor_rooms:        state.perFloorRooms,
+        per_floor_data:         state.perFloorData,
+        boys_quarters_count:    state.boysQuartersCount,
+        roof_type:              state.roofType || undefined,
+        budget:                 state.budget ? Number(state.budget.replace(/,/g, "")) : null,
+        target_completion_date: state.targetCompletionDate || null,
+      };
 
-      // Placeholder: navigate to projects list
-      await navigate("/projects");
+      const { data, error } = await supabase.functions.invoke("create-project", {
+        body: payload,
+      });
+
+      if (error) {
+        setSubmitError(error.message ?? "Failed to create project. Please try again.");
+        return;
+      }
+
+      const projectId: string = (data as { project_id: string }).project_id;
+      await navigate(`/projects/${projectId}`);
     } catch (err) {
       console.error("[create-project] failed:", err);
+      setSubmitError("An unexpected error occurred. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -117,6 +142,11 @@ export default function NewProjectPage() {
       isSubmitting={submitting}
     >
       {stepContent[step]}
+      {submitError && (
+        <p className="mt-4 rounded-lg border border-brand-border-grey bg-brand-light-grey px-4 py-3 text-sm text-brand-near-black">
+          {submitError}
+        </p>
+      )}
     </WizardShell>
   );
 }

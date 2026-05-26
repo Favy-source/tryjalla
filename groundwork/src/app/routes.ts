@@ -14,6 +14,7 @@ export default [
     index("routes/dashboard.tsx"),
     route("projects", "routes/projects.tsx"),
     route("projects/new", "routes/projects.new.tsx"),
+    route("projects/:projectId", "routes/projects.$projectId.tsx"),
     route("settings", "routes/settings.tsx"),
   ]),
 ] satisfies RouteConfig;
