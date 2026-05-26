@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm info *)",
+      "Bash(npm pack *)",
+      "Bash(# Check what the react-router.config.ts looks like for SPA mode *)",
+      "Read(//home/favour-nwachukwu/**)",
+      "Bash(npx create-react-router@latest groundwork --typescript --package-manager pnpm --no-git-init)",
+      "Bash(pnpm add *)",
+      "Bash(npx shadcn@latest add button input label separator --yes)",
+      "Bash(npx supabase *)",
+      "Bash(npx react-router *)",
+      "Bash(npx tsc *)",
+      "Bash(npx vitest *)",
+      "Bash(timeout 30 pnpm dev)",
+      "Bash(pnpm dev *)",
+      "Read(//tmp/**)"
+    ]
+  }
+}

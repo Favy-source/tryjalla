@@ -1,0 +1,126 @@
+@import "tailwindcss";
+
+/* ============================================================
+   Groundwork by Jalla — Design System Tokens (Tailwind CSS 4)
+   Strict greyscale brand. No accent colours. Ever.
+   ============================================================ */
+
+@theme {
+  /* Brand colours — reference as bg-brand-near-black, text-brand-mid-grey, etc. */
+  --color-brand-white: #ffffff;
+  --color-brand-near-black: #0a0a0a;
+  --color-brand-rich-black: #1a1a1a;
+  --color-brand-mid-grey: #888888;
+  --color-brand-light-grey: #f5f5f5;
+  --color-brand-black: #000000;
+  --color-brand-muted-grey: #9ca3af;
+  --color-brand-border-grey: #e5e5e5;
+
+  /* Typography — Inter only */
+  --font-sans: "Inter", system-ui, sans-serif;
+
+  /* Border radius */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+}
+
+/* ============================================================
+   shadcn/ui CSS variable overrides — mapped to greyscale brand
+   ============================================================ */
+
+@layer base {
+  :root {
+    /* Backgrounds */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 4%;
+
+    /* Cards */
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 4%;
+
+    /* Popovers */
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 4%;
+
+    /* Primary — black fill, white text */
+    --primary: 0 0% 0%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary — light grey fill */
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 4%;
+
+    /* Muted */
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 53%;
+
+    /* Accent */
+    --accent: 0 0% 96%;
+    --accent-foreground: 0 0% 4%;
+
+    /* Destructive — kept dark for greyscale brand */
+    --destructive: 0 0% 10%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Borders and inputs */
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 0 0% 4%;
+
+    /* Border radius (shadcn default) */
+    --radius: 0.5rem;
+  }
+}
+
+/* ============================================================
+   Base styles
+   ============================================================ */
+
+@layer base {
+  * {
+    @apply border-border box-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-sans);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Focus ring — keyboard only */
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2;
+  }
+}
+
+/* ============================================================
+   Scrollbar styling (subtle, greyscale)
+   ============================================================ */
+
+@layer base {
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #e5e5e5;
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #888888;
+  }
+}
