@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router";
 import {
   LayoutDashboard,
@@ -7,10 +8,13 @@ import {
   Bell,
   Settings,
   HelpCircle,
+  Menu,
+  X,
   ChevronDown,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { TIER_LABELS } from "@/lib/constants";
+import { NotificationBell } from "@/components/shared/NotificationBell";
 
 interface NavItem {
   label: string;
@@ -19,26 +23,31 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { label: "Dashboard",     href: "/",              icon: LayoutDashboard },
-  { label: "My Projects",   href: "/projects",      icon: FolderOpen      },
-  { label: "Payments",      href: "/payments",      icon: CreditCard      },
-  { label: "Documents",     href: "/documents",     icon: FileText        },
-  { label: "Notifications", href: "/notifications", icon: Bell            },
-  { label: "Settings",      href: "/settings",      icon: Settings        },
-  { label: "Help & Support",href: "/help",          icon: HelpCircle      },
+  { label: "Dashboard",      href: "/",              icon: LayoutDashboard },
+  { label: "My Projects",    href: "/projects",      icon: FolderOpen      },
+  { label: "Payments",       href: "/payments",      icon: CreditCard      },
+  { label: "Documents",      href: "/documents",     icon: FileText        },
+  { label: "Notifications",  href: "/notifications", icon: Bell            },
+  { label: "Settings",       href: "/settings",      icon: Settings        },
+  { label: "Help & Support", href: "/help",          icon: HelpCircle      },
 ];
 
-export function Sidebar() {
+// ─── Shared inner content (desktop + mobile drawer use the same) ────────────
+
+interface SidebarContentProps {
+  onNavClick?: () => void;
+}
+
+function SidebarContent({ onNavClick }: SidebarContentProps) {
   const location = useLocation();
   const { user, profile, signOut } = useAuth();
 
   const tierLabel =
     TIER_LABELS[profile?.subscription_tier ?? "self_serve"] ?? "Self Verify";
 
-  // Derive initials for avatar fallback
   const initials = (profile?.display_name ?? user?.email ?? "U")
     .split(" ")
-    .map((part) => part[0])
+    .map((part: string) => part[0])
     .slice(0, 2)
     .join("")
     .toUpperCase();
@@ -49,10 +58,10 @@ export function Sidebar() {
   }
 
   return (
-    <aside className="w-64 flex-shrink-0 border-r border-brand-border-grey bg-white flex flex-col">
-      {/* ── Logo ─────────────────────────────────────────────────────── */}
-      <div className="h-16 flex items-center px-6 border-b border-brand-border-grey">
-        <Link to="/" className="block">
+    <div className="flex flex-col h-full">
+      {/* ── Logo ───────────────────────────────────────────────────────── */}
+      <div className="h-16 flex items-center px-6 border-b border-brand-border-grey flex-shrink-0">
+        <Link to="/" className="block" onClick={onNavClick}>
           <p className="text-sm font-bold text-brand-near-black tracking-tight leading-none">
             Groundwork
           </p>
@@ -62,8 +71,11 @@ export function Sidebar() {
         </Link>
       </div>
 
-      {/* ── Navigation ───────────────────────────────────────────────── */}
-      <nav className="flex-1 px-3 py-4 space-y-0.5" aria-label="Main navigation">
+      {/* ── Navigation ─────────────────────────────────────────────────── */}
+      <nav
+        className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto"
+        aria-label="Main navigation"
+      >
         {NAV_ITEMS.map((item) => {
           const Icon = item.icon;
           const active = isActive(item.href);
@@ -71,6 +83,7 @@ export function Sidebar() {
             <Link
               key={item.href}
               to={item.href}
+              onClick={onNavClick}
               className={[
                 "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
                 active
@@ -86,8 +99,8 @@ export function Sidebar() {
         })}
       </nav>
 
-      {/* ── User card ────────────────────────────────────────────────── */}
-      <div className="p-4 border-t border-brand-border-grey">
+      {/* ── User card ──────────────────────────────────────────────────── */}
+      <div className="p-4 border-t border-brand-border-grey flex-shrink-0">
         <div className="flex items-center gap-3">
           {/* Avatar */}
           <div className="w-8 h-8 rounded-full bg-brand-light-grey border border-brand-border-grey flex items-center justify-center flex-shrink-0">
@@ -112,7 +125,7 @@ export function Sidebar() {
             <p className="text-xs text-brand-mid-grey">{tierLabel}</p>
           </div>
 
-          {/* Dropdown toggle — functionality added Day 2 */}
+          {/* Dropdown toggle — expanded functionality added later */}
           <button
             type="button"
             className="text-brand-mid-grey hover:text-brand-near-black transition-colors"
@@ -125,12 +138,138 @@ export function Sidebar() {
         {/* Sign out */}
         <button
           type="button"
-          onClick={() => void signOut()}
+          onClick={() => { void signOut(); onNavClick?.(); }}
           className="mt-3 w-full text-left text-xs text-brand-mid-grey hover:text-brand-near-black transition-colors"
         >
           Sign out
         </button>
       </div>
+    </div>
+  );
+}
+
+// ─── Desktop sidebar ────────────────────────────────────────────────────────
+
+function DesktopSidebar() {
+  return (
+    <aside className="hidden lg:flex w-64 flex-shrink-0 border-r border-brand-border-grey bg-white flex-col">
+      <SidebarContent />
     </aside>
+  );
+}
+
+// ─── Mobile top bar ─────────────────────────────────────────────────────────
+
+interface MobileTopBarProps {
+  onOpen: () => void;
+}
+
+function MobileTopBar({ onOpen }: MobileTopBarProps) {
+  return (
+    <header className="lg:hidden fixed top-0 left-0 right-0 z-30 h-14 flex items-center justify-between px-4 bg-white border-b border-brand-border-grey">
+      {/* Logo */}
+      <Link to="/" className="block">
+        <p className="text-sm font-bold text-brand-near-black tracking-tight leading-none">
+          Groundwork
+        </p>
+        <p className="text-xs text-brand-mid-grey font-medium leading-none mt-0.5">
+          by Jalla
+        </p>
+      </Link>
+
+      {/* Right side: notification bell + hamburger */}
+      <div className="flex items-center gap-1">
+        <NotificationBell />
+        <button
+          type="button"
+          onClick={onOpen}
+          className="flex items-center justify-center w-9 h-9 rounded-md text-brand-mid-grey hover:bg-brand-light-grey hover:text-brand-near-black transition-colors"
+          aria-label="Open navigation menu"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+      </div>
+    </header>
+  );
+}
+
+// ─── Mobile drawer ──────────────────────────────────────────────────────────
+
+interface MobileDrawerProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+function MobileDrawer({ open, onClose }: MobileDrawerProps) {
+  // Close on Escape key
+  useEffect(() => {
+    if (!open) return;
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose();
+    }
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [open, onClose]);
+
+  // Prevent body scroll while drawer is open
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [open]);
+
+  if (!open) return null;
+
+  return (
+    <>
+      {/* Backdrop */}
+      <div
+        className="lg:hidden fixed inset-0 z-40 bg-black/50"
+        aria-hidden="true"
+        onClick={onClose}
+      />
+
+      {/* Drawer panel */}
+      <aside
+        className="lg:hidden fixed left-0 top-0 bottom-0 z-50 w-64 bg-white shadow-xl flex flex-col"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Navigation menu"
+      >
+        {/* Close button inside drawer header */}
+        <div className="absolute top-3 right-3">
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex items-center justify-center w-8 h-8 rounded-md text-brand-mid-grey hover:bg-brand-light-grey hover:text-brand-near-black transition-colors"
+            aria-label="Close navigation menu"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        <SidebarContent onNavClick={onClose} />
+      </aside>
+    </>
+  );
+}
+
+// ─── Sidebar (exported) ─────────────────────────────────────────────────────
+// Renders desktop sidebar + mobile top bar + mobile drawer in one component.
+// _layout.tsx adds pt-14 lg:pt-0 to the main element to accommodate the
+// fixed mobile header.
+
+export function Sidebar() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  return (
+    <>
+      <DesktopSidebar />
+      <MobileTopBar onOpen={() => setMobileOpen(true)} />
+      <MobileDrawer open={mobileOpen} onClose={() => setMobileOpen(false)} />
+    </>
   );
 }

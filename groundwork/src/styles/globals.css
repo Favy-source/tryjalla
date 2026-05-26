@@ -29,6 +29,8 @@
 
 /* ============================================================
    shadcn/ui CSS variable overrides — mapped to greyscale brand
+   Tailwind CSS 4 note: these HSL vars are used by shadcn components
+   directly via hsl(var(--border)) etc. — not @apply.
    ============================================================ */
 
 @layer base {
@@ -77,30 +79,36 @@
 
 /* ============================================================
    Base styles
+   In Tailwind CSS 4, use direct CSS in @layer base instead of
+   @apply for utilities that map to CSS custom properties.
    ============================================================ */
 
 @layer base {
-  * {
-    @apply border-border box-border;
+  *, *::before, *::after {
+    box-sizing: border-box;
+    border-color: hsl(var(--border));
+  }
+
+  html {
+    scroll-behavior: smooth;
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
     font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-semibold tracking-tight;
   }
 
-  /* Smooth scrolling */
-  html {
-    scroll-behavior: smooth;
-  }
-
-  /* Focus ring — keyboard only */
+  /* Focus ring — keyboard navigation only */
   :focus-visible {
-    @apply outline-none ring-2 ring-ring ring-offset-2;
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
   }
 }
 
