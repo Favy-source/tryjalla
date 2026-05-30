@@ -11,6 +11,7 @@ import {
   Menu,
   X,
   ChevronDown,
+  HardHat,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { TIER_LABELS } from "@/lib/constants";
@@ -23,13 +24,14 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { label: "Dashboard",      href: "/",              icon: LayoutDashboard },
-  { label: "My Projects",    href: "/projects",      icon: FolderOpen      },
-  { label: "Payments",       href: "/payments",      icon: CreditCard      },
-  { label: "Documents",      href: "/documents",     icon: FileText        },
-  { label: "Notifications",  href: "/notifications", icon: Bell            },
-  { label: "Settings",       href: "/settings",      icon: Settings        },
-  { label: "Help & Support", href: "/help",          icon: HelpCircle      },
+  { label: "Dashboard",         href: "/",              icon: LayoutDashboard },
+  { label: "My Projects",       href: "/projects",      icon: FolderOpen      },
+  { label: "Find Contractors",  href: "/contractors",   icon: HardHat         },
+  { label: "Payments",          href: "/payments",      icon: CreditCard      },
+  { label: "Documents",         href: "/documents",     icon: FileText        },
+  { label: "Notifications",     href: "/notifications", icon: Bell            },
+  { label: "Settings",          href: "/settings",      icon: Settings        },
+  { label: "Help & Support",    href: "/help",          icon: HelpCircle      },
 ];
 
 // ─── Shared inner content (desktop + mobile drawer use the same) ────────────

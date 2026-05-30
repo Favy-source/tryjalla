@@ -137,7 +137,7 @@ CREATE TABLE public.project_substages (
   name             text        NOT NULL,
   description      text,
   status           text        NOT NULL DEFAULT 'not_started'
-    CHECK (status IN ('not_started', 'in_progress', 'completed', 'blocked')),
+    CHECK (status IN ('not_started', 'in_progress', 'complete', 'rejected')),
   notes            text,
   evidence_urls    text[]      NOT NULL DEFAULT '{}',
   completed_at     timestamptz,

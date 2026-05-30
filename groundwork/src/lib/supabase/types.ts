@@ -9,6 +9,306 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      audit_log: {
+        Row: {
+          action: string
+          actor_id: string | null
+          created_at: string
+          diff: Json | null
+          entity_id: string | null
+          entity_type: string
+          id: string
+          ip_address: string | null
+          metadata: Json
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          created_at?: string
+          diff?: Json | null
+          entity_id?: string | null
+          entity_type: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          created_at?: string
+          diff?: Json | null
+          entity_id?: string | null
+          entity_type?: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "audit_log_actor_id_fkey"
+            columns: ["actor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contractor_inquiries: {
+        Row: {
+          admin_note: string | null
+          budget_range: string | null
+          client_id: string
+          contractor_id: string
+          created_at: string
+          id: string
+          message: string
+          preferred_contact: string | null
+          project_id: string | null
+          resolved_at: string | null
+          start_window: string | null
+          status: string
+        }
+        Insert: {
+          admin_note?: string | null
+          budget_range?: string | null
+          client_id: string
+          contractor_id: string
+          created_at?: string
+          id?: string
+          message: string
+          preferred_contact?: string | null
+          project_id?: string | null
+          resolved_at?: string | null
+          start_window?: string | null
+          status?: string
+        }
+        Update: {
+          admin_note?: string | null
+          budget_range?: string | null
+          client_id?: string
+          contractor_id?: string
+          created_at?: string
+          id?: string
+          message?: string
+          preferred_contact?: string | null
+          project_id?: string | null
+          resolved_at?: string | null
+          start_window?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contractor_inquiries_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contractor_inquiries_contractor_id_fkey"
+            columns: ["contractor_id"]
+            isOneToOne: false
+            referencedRelation: "contractors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contractor_inquiries_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contractor_reviews: {
+        Row: {
+          body: string | null
+          contractor_id: string
+          created_at: string
+          headline: string | null
+          id: string
+          rating: number
+          reviewer_id: string
+        }
+        Insert: {
+          body?: string | null
+          contractor_id: string
+          created_at?: string
+          headline?: string | null
+          id?: string
+          rating: number
+          reviewer_id: string
+        }
+        Update: {
+          body?: string | null
+          contractor_id?: string
+          created_at?: string
+          headline?: string | null
+          id?: string
+          rating?: number
+          reviewer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contractor_reviews_contractor_id_fkey"
+            columns: ["contractor_id"]
+            isOneToOne: false
+            referencedRelation: "contractors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contractor_reviews_reviewer_id_fkey"
+            columns: ["reviewer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contractors: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          company_name: string | null
+          country: string
+          created_at: string
+          email: string | null
+          id: string
+          is_verified: boolean
+          name: string
+          phone: string | null
+          portfolio_url: string | null
+          primary_specialty: string
+          rating: number
+          region: string | null
+          review_count: number
+          specialties: string[]
+          updated_at: string
+          verified_at: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          company_name?: string | null
+          country: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_verified?: boolean
+          name: string
+          phone?: string | null
+          portfolio_url?: string | null
+          primary_specialty: string
+          rating?: number
+          region?: string | null
+          review_count?: number
+          specialties?: string[]
+          updated_at?: string
+          verified_at?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          company_name?: string | null
+          country?: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_verified?: boolean
+          name?: string
+          phone?: string | null
+          portfolio_url?: string | null
+          primary_specialty?: string
+          rating?: number
+          region?: string | null
+          review_count?: number
+          specialties?: string[]
+          updated_at?: string
+          verified_at?: string | null
+        }
+        Relationships: []
+      }
+      document_shares: {
+        Row: {
+          created_at: string
+          created_by: string
+          document_id: string
+          expires_at: string
+          id: string
+          token: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          document_id: string
+          expires_at: string
+          id?: string
+          token: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          document_id?: string
+          expires_at?: string
+          id?: string
+          token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_shares_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "document_shares_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "project_documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      messages: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          project_id: string
+          sender_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          project_id: string
+          sender_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          project_id?: string
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_sender_id_fkey"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notifications: {
         Row: {
           body: string
@@ -49,6 +349,121 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payment_events: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          notes: string | null
+          payment_id: string
+          receipt_url: string | null
+          recorded_by: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          notes?: string | null
+          payment_id: string
+          receipt_url?: string | null
+          recorded_by?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          notes?: string | null
+          payment_id?: string
+          receipt_url?: string | null
+          recorded_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_events_payment_id_fkey"
+            columns: ["payment_id"]
+            isOneToOne: false
+            referencedRelation: "payments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_events_recorded_by_fkey"
+            columns: ["recorded_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payments: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string
+          id: string
+          notes: string | null
+          paid_at: string | null
+          payment_method: string | null
+          project_id: string
+          receipt_url: string | null
+          recorded_by: string | null
+          stage_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          currency?: string
+          id?: string
+          notes?: string | null
+          paid_at?: string | null
+          payment_method?: string | null
+          project_id: string
+          receipt_url?: string | null
+          recorded_by?: string | null
+          stage_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          notes?: string | null
+          paid_at?: string | null
+          payment_method?: string | null
+          project_id?: string
+          receipt_url?: string | null
+          recorded_by?: string | null
+          stage_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_recorded_by_fkey"
+            columns: ["recorded_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_stage_id_fkey"
+            columns: ["stage_id"]
+            isOneToOne: false
+            referencedRelation: "stages"
             referencedColumns: ["id"]
           },
         ]
@@ -95,6 +510,86 @@ export type Database = {
         }
         Relationships: []
       }
+      project_documents: {
+        Row: {
+          category: Database["public"]["Enums"]["document_category"]
+          created_at: string
+          file_size: number | null
+          file_url: string
+          id: string
+          is_current: boolean
+          mime_type: string | null
+          name: string
+          notes: string | null
+          parent_id: string | null
+          project_id: string
+          stage_id: string | null
+          uploaded_by: string
+          version: number
+        }
+        Insert: {
+          category?: Database["public"]["Enums"]["document_category"]
+          created_at?: string
+          file_size?: number | null
+          file_url: string
+          id?: string
+          is_current?: boolean
+          mime_type?: string | null
+          name: string
+          notes?: string | null
+          parent_id?: string | null
+          project_id: string
+          stage_id?: string | null
+          uploaded_by: string
+          version?: number
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["document_category"]
+          created_at?: string
+          file_size?: number | null
+          file_url?: string
+          id?: string
+          is_current?: boolean
+          mime_type?: string | null
+          name?: string
+          notes?: string | null
+          parent_id?: string | null
+          project_id?: string
+          stage_id?: string | null
+          uploaded_by?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_documents_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "project_documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_documents_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_documents_stage_id_fkey"
+            columns: ["stage_id"]
+            isOneToOne: false
+            referencedRelation: "stages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_documents_uploaded_by_fkey"
+            columns: ["uploaded_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       project_substages: {
         Row: {
           completed_at: string | null
@@ -105,6 +600,10 @@ export type Database = {
           name: string
           notes: string | null
           project_id: string
+          rejected_at: string | null
+          rejected_by: string | null
+          rejection_note: string | null
+          requires_reupload: boolean
           stage_id: string
           status: string
           substage_number: number
@@ -119,6 +618,10 @@ export type Database = {
           name: string
           notes?: string | null
           project_id: string
+          rejected_at?: string | null
+          rejected_by?: string | null
+          rejection_note?: string | null
+          requires_reupload?: boolean
           stage_id: string
           status?: string
           substage_number: number
@@ -133,6 +636,10 @@ export type Database = {
           name?: string
           notes?: string | null
           project_id?: string
+          rejected_at?: string | null
+          rejected_by?: string | null
+          rejection_note?: string | null
+          requires_reupload?: boolean
           stage_id?: string
           status?: string
           substage_number?: number
@@ -144,6 +651,13 @@ export type Database = {
             columns: ["project_id"]
             isOneToOne: false
             referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_substages_rejected_by_fkey"
+            columns: ["rejected_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
           {
@@ -227,6 +741,39 @@ export type Database = {
           {
             foreignKeyName: "projects_owner_id_fkey"
             columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      saved_contractors: {
+        Row: {
+          contractor_id: string
+          created_at: string
+          user_id: string
+        }
+        Insert: {
+          contractor_id: string
+          created_at?: string
+          user_id: string
+        }
+        Update: {
+          contractor_id?: string
+          created_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_contractors_contractor_id_fkey"
+            columns: ["contractor_id"]
+            isOneToOne: false
+            referencedRelation: "contractors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "saved_contractors_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
@@ -349,6 +896,14 @@ export type Database = {
         | "super_admin"
         | "jala_professional"
         | "contractor"
+      document_category:
+        | "contract"
+        | "permit"
+        | "receipt"
+        | "invoice"
+        | "report"
+        | "certificate"
+        | "other"
       notification_type:
         | "stage_approved"
         | "stage_rejected"
@@ -496,6 +1051,15 @@ export const Constants = {
         "super_admin",
         "jala_professional",
         "contractor",
+      ],
+      document_category: [
+        "contract",
+        "permit",
+        "receipt",
+        "invoice",
+        "report",
+        "certificate",
+        "other",
       ],
       notification_type: [
         "stage_approved",

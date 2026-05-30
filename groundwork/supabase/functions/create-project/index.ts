@@ -101,7 +101,7 @@ async function insertNotification(
 ) {
   await svc.from("notifications").insert({
     user_id:     userId,
-    type:        "project_update",
+    type:        "project_created",
     title:       "Project created",
     body:        `Your project "${projectName}" has been created. Stage 1 is now active.`,
     entity_type: "project",
