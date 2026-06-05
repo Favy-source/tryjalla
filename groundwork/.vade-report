@@ -1,0 +1,41 @@
+# Vercel Web Analytics Installation
+
+Successfully installed and configured Vercel Web Analytics for this React Router v7 project.
+
+## Changes Made
+
+### 1. Package Installation
+- Installed `@vercel/analytics` v2.0.1 using pnpm
+- Added as a dependency in package.json
+- Updated pnpm-lock.yaml with the new dependency tree
+
+### 2. Code Integration
+**Modified: `src/app/root.tsx`**
+- Imported the `Analytics` component from `@vercel/analytics/react`
+- Added the `<Analytics />` component to the Layout function in the body tag, after Scripts
+
+The Analytics component was placed in the Layout component which wraps all pages, ensuring analytics tracking is enabled across the entire application.
+
+## Implementation Details
+
+Following the official Vercel documentation (https://vercel.com/docs/analytics/quickstart), I used the React-specific Analytics component since this project uses React Router v7 in SPA mode. The component is framework-agnostic and works perfectly with React Router.
+
+The Analytics component was placed at the end of the body tag alongside other React Router components (ScrollRestoration, Scripts) to ensure proper initialization order.
+
+## Verification
+
+All verifications passed successfully:
+- ✅ TypeScript type checking passed
+- ✅ Production build completed successfully
+- ✅ All 40 tests passed (4 test suites)
+- ✅ No linting errors introduced
+
+## Next Steps
+
+To enable analytics tracking:
+1. Deploy the application to Vercel
+2. Navigate to the Analytics tab in the Vercel dashboard
+3. Click "Enable" to activate Web Analytics
+4. Analytics will start collecting data on the next deployment
+
+The analytics will track page views automatically. Custom events can be tracked using the `track` function if needed in the future.
